@@ -86,7 +86,6 @@ before_script:
   echo "CT_NEWLIB_DEVEL_URL=\"${GITLAB_SSH_SERVER}/idf/newlib-cygwin.git\"" >> .config
   echo "CT_GCC_DEVEL_URL=\"${GITLAB_SSH_SERVER}/idf/gcc.git\"" >> .config
   echo "CT_BINUTILS_DEVEL_URL=\"${GITLAB_SSH_SERVER}/idf/binutils-gdb.git\"" >> .config
-  echo "CT_GDB_DEVEL_URL=\"${GITLAB_SSH_SERVER}/idf/binutils-gdb.git\"" >> .config
 
 # Configuration specific to Docker
 .configure_docker: &configure_docker |
@@ -108,16 +107,6 @@ before_script:
   echo "CT_HOST=\"${CONF_HOST}\"" >> .config
   echo "CT_HOST_PREFIX=\"${CONF_HOST}-\"" >> .config
   echo "CT_HOST_SUFFIX=\"\"" >> .config
-
-  # No support Python in GDB in cross-compilation now,
-  # see https://stackoverflow.com/questions/33512541/cross-compiling-gdb-for-arm-with-python-failed#34625177
-  # Espressif provides GDB 11+ with Python 3 support separately
-  echo "# CT_GDB_CROSS_PYTHON is not set" >> .config
-
-.configure_macos_native: &configure_macos_native |
-  # No old Python 2 on macOS anymore
-  # Espressif provides GDB 11+ with Python 3 support separately
-  echo "# CT_GDB_CROSS_PYTHON is not set" >> .config
 
 .configure_win_crossbuild: &configure_win_crossbuild |
   # Append option
@@ -288,7 +277,6 @@ riscv32_esp_macos:
   script:
     - *build_ctng_macos_native
     - *configure_common
-    - *configure_macos_native
     - *configure_docker
     - *build_toolchain
     - *package_toolchain
